@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
          $middleware->alias([
             'access.token' => \App\Http\Middleware\AuthenticateWithAccessToken::class,
+            'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

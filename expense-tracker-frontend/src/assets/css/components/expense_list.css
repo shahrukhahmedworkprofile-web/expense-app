@@ -1,0 +1,137 @@
+.expense-list {
+    width: 100%;
+}
+
+.expense-list-body {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.expense-list h2 {
+    margin: 0 0 18px;
+
+    font-size: 22px;
+    color: #111827;
+}
+
+.no-expenses {
+    padding: 35px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px dashed #d1d5db;
+    border-radius: 14px;
+
+    color: #6b7280;
+}
+
+.expense-card {
+    padding: 20px;
+    margin-bottom: 14px;
+    margin-left: 10px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgba(15, 23, 42, 0.04);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.expense-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #c7d2fe;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+.expense-card h3 {
+    margin: 0 0 12px;
+
+    font-size: 18px;
+    color: #111827;
+}
+
+.expense-card p {
+    margin: 7px 0;
+
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.expense-amount {
+    font-size: 20px !important;
+    font-weight: 700;
+
+    color: #4f46e5 !important;
+}
+
+.expense-category {
+    display: inline-block;
+
+    padding: 5px 10px;
+    margin-top: 4px;
+
+    border-radius: 20px;
+
+    background: #eef2ff;
+    color: #4338ca !important;
+
+    font-size: 12px !important;
+    font-weight: 600;
+}
+
+.expense-description {
+    margin-top: 14px !important;
+    padding-top: 14px;
+
+    border-top: 1px solid #f3f4f6;
+
+    line-height: 1.6;
+}
+
+.edit-button,
+.delete-button {
+    padding: 8px 14px;
+    margin-top: 14px;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.edit-button {
+    border: 1px solid #c7d2fe;
+
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.edit-button:hover {
+    background: #e0e7ff;
+}
+
+.delete-button {
+    margin-left: 10px;
+
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.delete-button:hover {
+    background: #fee2e2;
+}
+
+@media (max-width: 700px) {
+    .expense-card {
+        padding: 18px;
+    }
+}

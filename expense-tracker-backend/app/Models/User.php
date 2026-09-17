@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\RefreshToken;
 use App\Models\AccessToken;
-
+use App\Models\Expense;
 
 class User extends Authenticatable
 {
@@ -41,5 +41,10 @@ class User extends Authenticatable
     public function accessTokens(): HasMany
     {
         return $this->hasMany(AccessToken::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 }
