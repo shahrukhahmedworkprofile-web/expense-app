@@ -1,0 +1,91 @@
+services:
+
+  # ---------- Database tier ----------
+  db:
+    # Official MySQL 8 image
+    image: mysql:8.0
+    container_name: expense_db
+    # Restart automatically unless you stop it manually
+    restart: unless-stopped
+    environment:
+      # Root password (we will use this in the Laravel .env)
+      MYSQL_ROOT_PASSWORD: root
+      # Database created automatically on first start
+      MYSQL_DATABASE: expense_tracker
+    ports:
+      # Host port 3307 -> container port 3306 (3307 avoids clashing with any MySQL on your PC)
+      - "3307:3306"
+    volumes:
+      # Named volume so your data survives container restarts
+      - db_data:/var/lib/mysql
+    healthcheck:
+      # Checks that MySQL is ready to accept connections
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - expense-net
+
+  # ---------- Backend tier: PHP-FPM running Laravel ----------
+  backend:
+    # Build from the Dockerfile we created in Step 4
+    build: ./expense-tracker-backend
+    container_name: expense_backend
+    restart: unless-stopped
+    volumes:
+      # Mount your Laravel code into the container
+      - ./expense-tracker-backend:/var/www/html
+    depends_on:
+      db:
+        # Start only after MySQL is healthy
+        condition: service_healthy
+    networks:
+      - expense-net
+
+  # ---------- Backend web server: Nginx in front of PHP-FPM ----------
+  nginx:
+    image: nginx:alpine
+    container_name: expense_nginx
+    restart: unless-stopped
+    ports:
+      # Browser -> localhost:8000 -> Nginx (matches VITE_API_URL in the frontend)
+      - "8000:80"
+    volumes:
+      # Nginx needs the code to serve the public folder
+      - ./expense-tracker-backend:/var/www/html
+      # Use the Nginx config we created in Step 4
+      - ./expense-tracker-backend/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+    networks:
+      - expense-net
+
+  # ---------- Frontend tier: React + Vite ----------
+  frontend:
+    # Build from the Dockerfile we created in Step 5
+    build: ./expense-tracker-frontend
+    container_name: expense_frontend
+    restart: unless-stopped
+    ports:
+      # Vite dev server (matches the CORS origin http://localhost:5173)
+      - "5173:5173"
+    volumes:
+      # Mount your React code for live editing
+      - ./expense-tracker-frontend:/app
+      # Keep the container's own Linux node_modules (don't use the Windows ones)
+      - /app/node_modules
+    environment:
+      # Makes file-change detection work with Windows bind mounts
+      CHOKIDAR_USEPOLLING: "true"
+    networks:
+      - expense-net
+
+# Named volumes
+volumes:
+  db_data:
+
+# One private network so containers reach each other by service name (db, backend, ...)
+networks:
+  expense-net:
+    driver: bridge

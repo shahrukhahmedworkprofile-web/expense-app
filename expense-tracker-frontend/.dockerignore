@@ -1,0 +1,6 @@
+# Don't copy your Windows node_modules into the image (the container installs its own Linux ones)
+node_modules
+# Don't copy build output
+dist
+# Don't copy git data
+.git
